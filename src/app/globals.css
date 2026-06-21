@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode: `.dark` on <html> (or any wrapper, e.g. the
+   admin panel which themes itself independently of the public site). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ───────────────────────────────────────────────────────────
+   Semantic color tokens — light mode (default)
+   Palette: sage green · soft blue-gray · neutral cream
+   ─────────────────────────────────────────────────────────── */
+/* `[data-admin="light"]` lets the admin panel force light tokens even when the
+   site (<html>) is dark — attribute selectors survive Tailwind's purge and a
+   direct match on #admin-root beats the inherited <html> theme. */
+:root,
+[data-admin="light"] {
+  --background: 47 38% 96%;        /* warm cream */
+  --surface: 0 0% 100%;            /* card / panel */
+  --surface-2: 45 33% 93%;         /* subtle raised */
+  --foreground: 120 8% 16%;        /* deep warm charcoal */
+  --muted: 110 6% 44%;             /* secondary text */
+  --border: 42 22% 86%;            /* hairlines */
+  --ring: 110 18% 45%;
+
+  --primary: 110 17% 44%;          /* sage green */
+  --primary-foreground: 47 38% 97%;
+  --primary-soft: 110 24% 90%;
+
+  --secondary: 202 18% 56%;        /* soft blue-gray */
+  --secondary-foreground: 210 20% 18%;
+  --secondary-soft: 202 30% 92%;
+
+  --accent: 38 45% 88%;            /* warm sand accent */
+
+  --success: 142 45% 38%;
+  --danger: 0 60% 50%;
+
+  --shadow-color: 120 12% 30%;
+
+  --radius: 1rem;
+}
+
+.dark,
+[data-admin="dark"] {
+  --background: 120 8% 7%;         /* warm near-black */
+  --surface: 120 7% 11%;
+  --surface-2: 120 6% 14%;
+  --foreground: 45 28% 92%;
+  --muted: 110 6% 62%;
+  --border: 120 6% 20%;
+  --ring: 110 22% 60%;
+
+  --primary: 108 24% 64%;          /* lifted sage for contrast */
+  --primary-foreground: 120 12% 9%;
+  --primary-soft: 110 14% 20%;
+
+  --secondary: 202 22% 64%;
+  --secondary-foreground: 210 30% 92%;
+  --secondary-soft: 202 16% 22%;
+
+  --accent: 38 14% 22%;
+
+  --success: 142 40% 55%;
+  --danger: 0 65% 62%;
+
+  --shadow-color: 0 0% 0%;
+}
+
+/* ───────────────────────────────────────────────────────────
+   Map semantic tokens into Tailwind's theme so utilities like
+   `bg-background`, `text-muted`, `border-border` work.
+   ─────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-surface: hsl(var(--surface));
+  --color-surface-2: hsl(var(--surface-2));
+  --color-foreground: hsl(var(--foreground));
+  --color-muted: hsl(var(--muted));
+  --color-border: hsl(var(--border));
+  --color-ring: hsl(var(--ring));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-soft: hsl(var(--primary-soft));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-soft: hsl(var(--secondary-soft));
+
+  --color-accent: hsl(var(--accent));
+  --color-success: hsl(var(--success));
+  --color-danger: hsl(var(--danger));
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+  --radius-2xl: calc(var(--radius) + 1rem);
+}
+
+/* ───────────────────────────────────────────────────────────
+   Base styles
+   ─────────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: hsl(var(--primary) / 0.22);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────
+   Reusable utilities
+   ─────────────────────────────────────────────────────────── */
+@layer utilities {
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-page { padding-inline: 2rem; }
+  }
+
+  .text-gradient {
+    background: linear-gradient(
+      120deg,
+      hsl(var(--primary)),
+      hsl(var(--secondary))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glass {
+    background-color: hsl(var(--surface) / 0.7);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+  }
+
+  .shadow-soft {
+    box-shadow:
+      0 1px 2px hsl(var(--shadow-color) / 0.04),
+      0 8px 24px -12px hsl(var(--shadow-color) / 0.18);
+  }
+  .shadow-lift {
+    box-shadow:
+      0 2px 4px hsl(var(--shadow-color) / 0.05),
+      0 24px 48px -24px hsl(var(--shadow-color) / 0.28);
+  }
+
+  /* Decorative animated blobs in the hero */
+  .animate-float {
+    animation: float 9s ease-in-out infinite;
+  }
+  .animate-float-slow {
+    animation: float 14s ease-in-out infinite;
+  }
+}
+
+/* Article body (blog detail) — lightweight typography */
+.prose-content {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: hsl(var(--foreground) / 0.9);
+}
+.prose-content > * + * { margin-top: 1.25rem; }
+.prose-content h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 2.5rem;
+}
+.prose-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 2rem;
+}
+.prose-content ul, .prose-content ol {
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.prose-content ul { list-style: disc; }
+.prose-content ol { list-style: decimal; }
+.prose-content a {
+  color: hsl(var(--primary));
+  text-underline-offset: 3px;
+  text-decoration: underline;
+}
+.prose-content blockquote {
+  border-left: 3px solid hsl(var(--primary));
+  padding-left: 1.25rem;
+  font-style: italic;
+  color: hsl(var(--muted));
+}
+.prose-content strong { font-weight: 600; color: hsl(var(--foreground)); }
+
+/* ── Book cover image effects ── */
+
+/* Loading shimmer skeleton */
+.cover-skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--surface-2)) 0%,
+    hsl(var(--surface)) 50%,
+    hsl(var(--surface-2)) 100%
+  );
+  background-size: 200% 100%;
+  animation: cover-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes cover-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Glossy light sweep on hover (book sheen) */
+.cover-shine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.cover-shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  transform: translateX(-160%) skewX(-15deg);
+}
+.group:hover .cover-shine::before {
+  transition: transform 0.9s ease;
+  transform: translateX(280%) skewX(-15deg);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+  50% { transform: translateY(-24px) translateX(12px) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
