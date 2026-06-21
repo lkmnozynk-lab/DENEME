@@ -1,14 +1,14 @@
 // NERAAJANS — Prisma schema
-// Provider-agnostic: runs on SQLite (zero-setup local dev) and PostgreSQL
-// (production). Enums are modelled as validated strings and the Work.services
-// list as a JSON string so the same schema works on both engines.
+// PostgreSQL (production on Vercel). Enums are modelled as validated strings
+// and list fields (Work.services, ServicePage.*) as JSON strings, so the schema
+// stays portable.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
